@@ -18,4 +18,7 @@ public class PermissionQueryDTO {
 
     @Schema(description = "状态：0-禁用，1-启用")
     private Integer status;
+
+    @Schema(description = "子系统编码")
+    private String subsystemCode;
 }

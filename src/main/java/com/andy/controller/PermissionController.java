@@ -66,15 +66,17 @@ public class PermissionController {
 
     @GetMapping("/tree/all")
     @Operation(summary = "查询全部菜单树")
-    public CommonResult<List<PermissionTreeVO>> getAllPermissionTree() {
-        List<PermissionTreeVO> tree = permissionService.getAllPermissionTree();
+    public CommonResult<List<PermissionTreeVO>> getAllPermissionTree(
+            @Parameter(description = "子系统编码") @RequestParam(required = false) String subsystemCode) {
+        List<PermissionTreeVO> tree = permissionService.getAllPermissionTree(subsystemCode);
         return CommonResult.success(tree);
     }
 
     @GetMapping("/tree/active")
     @Operation(summary = "查询有效菜单树")
-    public CommonResult<List<PermissionTreeVO>> getActivePermissionTree() {
-        List<PermissionTreeVO> tree = permissionService.getActivePermissionTree();
+    public CommonResult<List<PermissionTreeVO>> getActivePermissionTree(
+            @Parameter(description = "子系统编码") @RequestParam(required = false) String subsystemCode) {
+        List<PermissionTreeVO> tree = permissionService.getActivePermissionTree(subsystemCode);
         return CommonResult.success(tree);
     }
 }

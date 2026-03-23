@@ -18,4 +18,5 @@ public class SysPermission extends BaseEntity {
     private String icon;
     private Integer sort;
     private Integer status;
+    private String subsystemCode;
 }

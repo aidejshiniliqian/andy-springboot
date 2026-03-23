@@ -28,5 +28,5 @@ public interface SysUserService extends IService<SysUser> {
 
     List<Long> getRoleIdsByUserId(Long userId);
 
-    List<PermissionTreeVO> getUserPermissionTree(Long userId);
+    List<PermissionTreeVO> getUserPermissionTree(Long userId, String subsystemCode);
 }

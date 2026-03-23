@@ -84,8 +84,9 @@ public class UserController {
     @GetMapping("/{userId}/permission-tree")
     @Operation(summary = "查询用户菜单树")
     public CommonResult<List<PermissionTreeVO>> getUserPermissionTree(
-            @Parameter(description = "用户ID") @PathVariable Long userId) {
-        List<PermissionTreeVO> tree = userService.getUserPermissionTree(userId);
+            @Parameter(description = "用户ID") @PathVariable Long userId,
+            @Parameter(description = "子系统编码") @RequestParam(required = false) String subsystemCode) {
+        List<PermissionTreeVO> tree = userService.getUserPermissionTree(userId, subsystemCode);
         return CommonResult.success(tree);
     }
 }

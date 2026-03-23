@@ -12,9 +12,9 @@ import java.util.List;
 
 public interface SysPermissionService extends IService<SysPermission> {
 
-    List<SysPermission> getPermissionsByUserId(Long userId);
+    List<SysPermission> getPermissionsByUserId(Long userId, String subsystemCode);
 
-    List<String> getPermissionCodesByUserId(Long userId);
+    List<String> getPermissionCodesByUserId(Long userId, String subsystemCode);
 
     Long createPermission(PermissionCreateDTO dto);
 
@@ -26,9 +26,9 @@ public interface SysPermissionService extends IService<SysPermission> {
 
     Page<SysPermission> getPermissionPage(Page<SysPermission> page, PermissionQueryDTO dto);
 
-    List<PermissionTreeVO> getAllPermissionTree();
+    List<PermissionTreeVO> getAllPermissionTree(String subsystemCode);
 
-    List<PermissionTreeVO> getActivePermissionTree();
+    List<PermissionTreeVO> getActivePermissionTree(String subsystemCode);
 
     List<PermissionTreeVO> buildPermissionTree(List<SysPermission> permissions);
 }

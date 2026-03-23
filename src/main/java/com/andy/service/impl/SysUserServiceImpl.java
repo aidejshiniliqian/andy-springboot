@@ -159,8 +159,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     }
 
     @Override
-    public List<PermissionTreeVO> getUserPermissionTree(Long userId) {
-        List<SysPermission> permissions = permissionService.getPermissionsByUserId(userId);
+    public List<PermissionTreeVO> getUserPermissionTree(Long userId, String subsystemCode) {
+        List<SysPermission> permissions = permissionService.getPermissionsByUserId(userId, subsystemCode);
         if (permissions.isEmpty()) {
             return Collections.emptyList();
         }
