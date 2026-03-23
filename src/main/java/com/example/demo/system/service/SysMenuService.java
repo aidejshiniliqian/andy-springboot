@@ -13,6 +13,10 @@ public interface SysMenuService extends IService<SysMenu> {
 
     List<SysMenuVO> listActiveMenuTree();
 
+    List<SysMenuVO> listAllMenuTreeBySystemCode(String systemCode);
+
+    List<SysMenuVO> listActiveMenuTreeBySystemCode(String systemCode);
+
     List<SysMenuVO> buildMenuTree(List<SysMenu> menus);
 
     void saveMenu(SysMenuDTO menuDTO);
@@ -22,4 +26,6 @@ public interface SysMenuService extends IService<SysMenu> {
     void deleteMenu(Long id);
 
     List<SysMenuVO> getMenuTreeByMenuIds(List<Long> menuIds);
+
+    List<SysMenuVO> getMenuTreeByMenuIdsAndSystemCode(List<Long> menuIds, String systemCode);
 }

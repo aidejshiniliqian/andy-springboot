@@ -38,4 +38,7 @@ public class SysMenuDTO {
 
     @Schema(description = "状态：0禁用，1正常")
     private Integer status;
+
+    @Schema(description = "子系统编码")
+    private String systemCode;
 }

@@ -90,4 +90,10 @@ public class SysUserController {
     public CommonResult<List<SysMenuVO>> getUserMenuTree(@PathVariable Long userId) {
         return CommonResult.success(sysUserService.getUserMenuTree(userId));
     }
+
+    @GetMapping("/{userId}/menuTree/{systemCode}")
+    @Operation(summary = "根据子系统编码获取用户菜单树")
+    public CommonResult<List<SysMenuVO>> getUserMenuTreeBySystemCode(@PathVariable Long userId, @PathVariable String systemCode) {
+        return CommonResult.success(sysUserService.getUserMenuTreeBySystemCode(userId, systemCode));
+    }
 }

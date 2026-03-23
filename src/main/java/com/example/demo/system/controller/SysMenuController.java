@@ -50,6 +50,18 @@ public class SysMenuController {
         return CommonResult.success(sysMenuService.listActiveMenuTree());
     }
 
+    @GetMapping("/tree/all/{systemCode}")
+    @Operation(summary = "根据子系统编码获取全部菜单树")
+    public CommonResult<List<SysMenuVO>> getAllMenuTreeBySystemCode(@PathVariable String systemCode) {
+        return CommonResult.success(sysMenuService.listAllMenuTreeBySystemCode(systemCode));
+    }
+
+    @GetMapping("/tree/active/{systemCode}")
+    @Operation(summary = "根据子系统编码获取有效菜单树")
+    public CommonResult<List<SysMenuVO>> getActiveMenuTreeBySystemCode(@PathVariable String systemCode) {
+        return CommonResult.success(sysMenuService.listActiveMenuTreeBySystemCode(systemCode));
+    }
+
     @GetMapping("/{id}")
     @Operation(summary = "根据ID获取菜单")
     public CommonResult<SysMenuVO> getById(@PathVariable Long id) {

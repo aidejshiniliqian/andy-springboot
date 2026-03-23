@@ -20,4 +20,6 @@ public interface SysUserService extends IService<SysUser> {
     List<Long> getRoleIdsByUserId(Long userId);
 
     List<SysMenuVO> getUserMenuTree(Long userId);
+
+    List<SysMenuVO> getUserMenuTreeBySystemCode(Long userId, String systemCode);
 }

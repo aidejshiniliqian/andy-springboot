@@ -99,6 +99,16 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         return sysMenuService.getMenuTreeByMenuIds(new ArrayList<>(menuIds));
     }
 
+    @Override
+    public List<SysMenuVO> getUserMenuTreeBySystemCode(Long userId, String systemCode) {
+        List<Long> roleIds = getRoleIdsByUserId(userId);
+        if (CollUtil.isEmpty(roleIds)) {
+            return new ArrayList<>();
+        }
+        Set<Long> menuIds = getIntersectionMenuIds(roleIds);
+        return sysMenuService.getMenuTreeByMenuIdsAndSystemCode(new ArrayList<>(menuIds), systemCode);
+    }
+
     private Set<Long> getIntersectionMenuIds(List<Long> roleIds) {
         Set<Long> result = null;
         for (Long roleId : roleIds) {

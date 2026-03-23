@@ -37,6 +37,25 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     }
 
     @Override
+    public List<SysMenuVO> listAllMenuTreeBySystemCode(String systemCode) {
+        LambdaQueryWrapper<SysMenu> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(SysMenu::getSystemCode, systemCode);
+        wrapper.orderByAsc(SysMenu::getSort, SysMenu::getId);
+        List<SysMenu> menus = this.list(wrapper);
+        return buildMenuTree(menus);
+    }
+
+    @Override
+    public List<SysMenuVO> listActiveMenuTreeBySystemCode(String systemCode) {
+        LambdaQueryWrapper<SysMenu> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(SysMenu::getSystemCode, systemCode);
+        wrapper.eq(SysMenu::getStatus, 1);
+        wrapper.orderByAsc(SysMenu::getSort, SysMenu::getId);
+        List<SysMenu> menus = this.list(wrapper);
+        return buildMenuTree(menus);
+    }
+
+    @Override
     public List<SysMenuVO> buildMenuTree(List<SysMenu> menus) {
         if (CollUtil.isEmpty(menus)) {
             return new ArrayList<>();
@@ -82,6 +101,20 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         }
         LambdaQueryWrapper<SysMenu> wrapper = new LambdaQueryWrapper<>();
         wrapper.in(SysMenu::getId, menuIds);
+        wrapper.eq(SysMenu::getStatus, 1);
+        wrapper.orderByAsc(SysMenu::getSort, SysMenu::getId);
+        List<SysMenu> menus = this.list(wrapper);
+        return buildMenuTree(menus);
+    }
+
+    @Override
+    public List<SysMenuVO> getMenuTreeByMenuIdsAndSystemCode(List<Long> menuIds, String systemCode) {
+        if (CollUtil.isEmpty(menuIds)) {
+            return new ArrayList<>();
+        }
+        LambdaQueryWrapper<SysMenu> wrapper = new LambdaQueryWrapper<>();
+        wrapper.in(SysMenu::getId, menuIds);
+        wrapper.eq(SysMenu::getSystemCode, systemCode);
         wrapper.eq(SysMenu::getStatus, 1);
         wrapper.orderByAsc(SysMenu::getSort, SysMenu::getId);
         List<SysMenu> menus = this.list(wrapper);
