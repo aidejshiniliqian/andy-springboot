@@ -11,13 +11,23 @@ public interface SysPermissionService extends IService<SysPermission> {
 
     List<SysPermission> getPermissionsByRoleId(Long roleId);
 
+    List<SysPermission> getPermissionsByRoleId(Long roleId, String subsystemCode);
+
     List<SysPermission> getPermissionsByUserId(Long userId);
+
+    List<SysPermission> getPermissionsByUserId(Long userId, String subsystemCode);
 
     List<SysPermission> getPermissionTree();
 
+    List<SysPermission> getPermissionTree(String subsystemCode);
+
     List<PermissionVO> getAllPermissionTree();
 
+    List<PermissionVO> getAllPermissionTree(String subsystemCode);
+
     List<PermissionVO> getValidPermissionTree();
+
+    List<PermissionVO> getValidPermissionTree(String subsystemCode);
 
     PermissionVO getPermissionVOById(Long id);
 

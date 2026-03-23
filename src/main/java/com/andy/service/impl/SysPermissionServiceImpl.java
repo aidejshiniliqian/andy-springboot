@@ -28,8 +28,24 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
     }
 
     @Override
+    public List<SysPermission> getPermissionsByRoleId(Long roleId, String subsystemCode) {
+        if (subsystemCode == null || subsystemCode.isEmpty()) {
+            return sysPermissionMapper.selectPermissionsByRoleId(roleId);
+        }
+        return sysPermissionMapper.selectPermissionsByRoleIdAndSubsystem(roleId, subsystemCode);
+    }
+
+    @Override
     public List<SysPermission> getPermissionsByUserId(Long userId) {
         return sysPermissionMapper.selectPermissionsByUserId(userId);
+    }
+
+    @Override
+    public List<SysPermission> getPermissionsByUserId(Long userId, String subsystemCode) {
+        if (subsystemCode == null || subsystemCode.isEmpty()) {
+            return sysPermissionMapper.selectPermissionsByUserId(userId);
+        }
+        return sysPermissionMapper.selectPermissionsByUserIdAndSubsystem(userId, subsystemCode);
     }
 
     @Override
@@ -37,6 +53,19 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
         LambdaQueryWrapper<SysPermission> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(SysPermission::getStatus, 1);
         wrapper.eq(SysPermission::getDeleted, 0);
+        wrapper.orderByAsc(SysPermission::getSort);
+        List<SysPermission> allPermissions = this.list(wrapper);
+        return buildTree(allPermissions, 0L);
+    }
+
+    @Override
+    public List<SysPermission> getPermissionTree(String subsystemCode) {
+        LambdaQueryWrapper<SysPermission> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(SysPermission::getStatus, 1);
+        wrapper.eq(SysPermission::getDeleted, 0);
+        if (subsystemCode != null && !subsystemCode.isEmpty()) {
+            wrapper.eq(SysPermission::getSubsystemCode, subsystemCode);
+        }
         wrapper.orderByAsc(SysPermission::getSort);
         List<SysPermission> allPermissions = this.list(wrapper);
         return buildTree(allPermissions, 0L);
@@ -52,10 +81,35 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
     }
 
     @Override
+    public List<PermissionVO> getAllPermissionTree(String subsystemCode) {
+        LambdaQueryWrapper<SysPermission> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(SysPermission::getDeleted, 0);
+        if (subsystemCode != null && !subsystemCode.isEmpty()) {
+            wrapper.eq(SysPermission::getSubsystemCode, subsystemCode);
+        }
+        wrapper.orderByAsc(SysPermission::getSort);
+        List<SysPermission> allPermissions = this.list(wrapper);
+        return buildPermissionTree(allPermissions);
+    }
+
+    @Override
     public List<PermissionVO> getValidPermissionTree() {
         LambdaQueryWrapper<SysPermission> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(SysPermission::getStatus, 1);
         wrapper.eq(SysPermission::getDeleted, 0);
+        wrapper.orderByAsc(SysPermission::getSort);
+        List<SysPermission> validPermissions = this.list(wrapper);
+        return buildPermissionTree(validPermissions);
+    }
+
+    @Override
+    public List<PermissionVO> getValidPermissionTree(String subsystemCode) {
+        LambdaQueryWrapper<SysPermission> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(SysPermission::getStatus, 1);
+        wrapper.eq(SysPermission::getDeleted, 0);
+        if (subsystemCode != null && !subsystemCode.isEmpty()) {
+            wrapper.eq(SysPermission::getSubsystemCode, subsystemCode);
+        }
         wrapper.orderByAsc(SysPermission::getSort);
         List<SysPermission> validPermissions = this.list(wrapper);
         return buildPermissionTree(validPermissions);

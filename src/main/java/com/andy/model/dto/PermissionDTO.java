@@ -48,4 +48,7 @@ public class PermissionDTO implements Serializable {
 
     @Schema(description = "描述")
     private String description;
+
+    @Schema(description = "子系统编码(pc:PC端,app:APP端)")
+    private String subsystemCode;
 }

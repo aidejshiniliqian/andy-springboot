@@ -31,4 +31,6 @@ public interface SysUserService extends IService<SysUser> {
     List<UserVO> getUserVOList();
 
     List<PermissionVO> getUserMenuTree(Long userId);
+
+    List<PermissionVO> getUserMenuTree(Long userId, String subsystemCode);
 }

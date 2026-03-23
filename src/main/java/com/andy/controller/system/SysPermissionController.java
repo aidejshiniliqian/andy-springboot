@@ -23,14 +23,18 @@ public class SysPermissionController {
 
     @Operation(summary = "获取全部菜单树（包含禁用）")
     @GetMapping("/tree/all")
-    public CommonResult<List<PermissionVO>> getAllPermissionTree() {
-        return CommonResult.success(sysPermissionService.getAllPermissionTree());
+    public CommonResult<List<PermissionVO>> getAllPermissionTree(
+            @Parameter(description = "子系统编码(pc:PC端,app:APP端)")
+            @RequestParam(required = false) String subsystemCode) {
+        return CommonResult.success(sysPermissionService.getAllPermissionTree(subsystemCode));
     }
 
     @Operation(summary = "获取有效菜单树（仅启用的菜单，用于前端展示）")
     @GetMapping("/tree/valid")
-    public CommonResult<List<PermissionVO>> getValidPermissionTree() {
-        return CommonResult.success(sysPermissionService.getValidPermissionTree());
+    public CommonResult<List<PermissionVO>> getValidPermissionTree(
+            @Parameter(description = "子系统编码(pc:PC端,app:APP端)")
+            @RequestParam(required = false) String subsystemCode) {
+        return CommonResult.success(sysPermissionService.getValidPermissionTree(subsystemCode));
     }
 
     @Operation(summary = "根据ID获取权限")
@@ -59,8 +63,11 @@ public class SysPermissionController {
 
     @Operation(summary = "获取角色的权限列表")
     @GetMapping("/role/{roleId}")
-    public CommonResult<List<PermissionVO>> getPermissionsByRoleId(@Parameter(description = "角色ID") @PathVariable Long roleId) {
+    public CommonResult<List<PermissionVO>> getPermissionsByRoleId(
+            @Parameter(description = "角色ID") @PathVariable Long roleId,
+            @Parameter(description = "子系统编码(pc:PC端,app:APP端)")
+            @RequestParam(required = false) String subsystemCode) {
         return CommonResult.success(sysPermissionService.buildPermissionTree(
-                sysPermissionService.getPermissionsByRoleId(roleId)));
+                sysPermissionService.getPermissionsByRoleId(roleId, subsystemCode)));
     }
 }

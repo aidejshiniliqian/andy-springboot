@@ -44,6 +44,9 @@ public class SysPermission extends BaseEntity {
     @Schema(description = "描述")
     private String description;
 
+    @Schema(description = "子系统编码(pc:PC端,app:APP端)")
+    private String subsystemCode;
+
     @Schema(description = "子权限列表")
     @com.baomidou.mybatisplus.annotation.TableField(exist = false)
     private java.util.List<SysPermission> children;

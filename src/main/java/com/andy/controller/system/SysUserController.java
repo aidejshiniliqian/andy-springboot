@@ -97,7 +97,10 @@ public class SysUserController {
 
     @Operation(summary = "获取用户菜单树（多角色权限交集）")
     @GetMapping("/{userId}/menu-tree")
-    public CommonResult<List<PermissionVO>> getUserMenuTree(@Parameter(description = "用户ID") @PathVariable Long userId) {
-        return CommonResult.success(sysUserService.getUserMenuTree(userId));
+    public CommonResult<List<PermissionVO>> getUserMenuTree(
+            @Parameter(description = "用户ID") @PathVariable Long userId,
+            @Parameter(description = "子系统编码(pc:PC端,app:APP端)")
+            @RequestParam(required = false) String subsystemCode) {
+        return CommonResult.success(sysUserService.getUserMenuTree(userId, subsystemCode));
     }
 }

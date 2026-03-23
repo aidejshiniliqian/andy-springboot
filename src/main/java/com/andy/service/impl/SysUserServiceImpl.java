@@ -171,6 +171,11 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     @Override
     public List<PermissionVO> getUserMenuTree(Long userId) {
+        return getUserMenuTree(userId, null);
+    }
+
+    @Override
+    public List<PermissionVO> getUserMenuTree(Long userId, String subsystemCode) {
         List<SysRole> roles = sysRoleService.getRolesByUserId(userId);
         if (CollectionUtils.isEmpty(roles)) {
             return new ArrayList<>();
@@ -178,7 +183,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
         Set<Long> commonPermissionIds = null;
         for (SysRole role : roles) {
-            List<SysPermission> permissions = sysPermissionService.getPermissionsByRoleId(role.getId());
+            List<SysPermission> permissions = sysPermissionService.getPermissionsByRoleId(role.getId(), subsystemCode);
             Set<Long> permissionIds = permissions.stream()
                     .map(SysPermission::getId)
                     .collect(Collectors.toSet());
