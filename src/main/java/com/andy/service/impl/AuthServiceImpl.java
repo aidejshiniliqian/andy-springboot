@@ -9,9 +9,14 @@ import com.andy.model.vo.PermissionVO;
 import com.andy.service.AuthService;
 import com.andy.service.SysPermissionService;
 import com.andy.service.SysUserService;
+import com.andy.service.TokenBlacklistService;
+import com.andy.util.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.List;
 
@@ -22,6 +27,8 @@ public class AuthServiceImpl implements AuthService {
     private final SysUserService sysUserService;
     private final SysPermissionService sysPermissionService;
     private final SysUserMapper sysUserMapper;
+    private final JwtUtil jwtUtil;
+    private final TokenBlacklistService tokenBlacklistService;
 
     @Override
     public LoginVO login(LoginDTO loginDTO) {
@@ -42,6 +49,9 @@ public class AuthServiceImpl implements AuthService {
         BeanUtils.copyProperties(user, loginVO);
         loginVO.setUserId(user.getId());
 
+        String token = jwtUtil.generateToken(user.getId(), user.getUsername());
+        loginVO.setToken(token);
+
         List<String> roles = sysUserService.getRoleCodesByUserId(user.getId());
         loginVO.setRoles(roles);
 
@@ -56,5 +66,18 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void logout() {
+        HttpServletRequest request = getCurrentRequest();
+        if (request != null) {
+            String authHeader = request.getHeader(jwtUtil.getHeaderString());
+            if (authHeader != null && authHeader.startsWith(jwtUtil.getTokenPrefix())) {
+                String token = authHeader.substring(jwtUtil.getTokenPrefix().length());
+                tokenBlacklistService.addToBlacklist(token);
+            }
+        }
+    }
+
+    private HttpServletRequest getCurrentRequest() {
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        return attributes != null ? attributes.getRequest() : null;
     }
 }
