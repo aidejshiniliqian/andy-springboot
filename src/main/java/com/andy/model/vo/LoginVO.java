@@ -12,6 +12,9 @@ public class LoginVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @Schema(description = "访问令牌")
+    private String token;
+
     @Schema(description = "用户ID")
     private Long userId;
 
