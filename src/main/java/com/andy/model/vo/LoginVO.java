@@ -38,4 +38,7 @@ public class LoginVO implements Serializable {
 
     @Schema(description = "菜单树")
     private List<PermissionVO> menus;
+
+    @Schema(description = "JWT令牌")
+    private String token;
 }
