@@ -9,6 +9,8 @@ import com.andy.model.vo.PermissionVO;
 import com.andy.service.AuthService;
 import com.andy.service.SysPermissionService;
 import com.andy.service.SysUserService;
+import com.andy.service.TokenService;
+import com.andy.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,8 @@ public class AuthServiceImpl implements AuthService {
     private final SysUserService sysUserService;
     private final SysPermissionService sysPermissionService;
     private final SysUserMapper sysUserMapper;
+    private final JwtUtil jwtUtil;
+    private final TokenService tokenService;
 
     @Override
     public LoginVO login(LoginDTO loginDTO) {
@@ -51,10 +55,22 @@ public class AuthServiceImpl implements AuthService {
         List<PermissionVO> menus = sysUserService.getUserMenuTree(user.getId(), loginDTO.getSubsystemCode());
         loginVO.setMenus(menus);
 
+        String token = jwtUtil.generateToken(user.getId(), user.getUsername());
+        loginVO.setAccessToken(token);
+        loginVO.setTokenType("Bearer");
+        loginVO.setExpiresIn(jwtUtil.getExpirationTime());
+
         return loginVO;
     }
 
     @Override
-    public void logout() {
+    public void logout(String token) {
+        if (token != null && !token.isEmpty()) {
+            if (token.startsWith("Bearer ")) {
+                token = token.substring(7);
+            }
+            long expirationTime = jwtUtil.getExpirationTime();
+            tokenService.blacklistToken(token, expirationTime);
+        }
     }
 }
