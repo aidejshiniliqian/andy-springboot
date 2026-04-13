@@ -1,5 +1,6 @@
 package com.andy.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.BCrypt;
 import com.andy.entity.system.SysUser;
 import com.andy.mapper.SysUserMapper;
@@ -9,9 +10,13 @@ import com.andy.model.vo.PermissionVO;
 import com.andy.service.AuthService;
 import com.andy.service.SysPermissionService;
 import com.andy.service.SysUserService;
+import com.andy.util.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.List;
 
@@ -51,10 +56,30 @@ public class AuthServiceImpl implements AuthService {
         List<PermissionVO> menus = sysUserService.getUserMenuTree(user.getId(), loginDTO.getSubsystemCode());
         loginVO.setMenus(menus);
 
+        String token = JwtUtil.generateToken(user.getId(), user.getUsername());
+        loginVO.setToken(token);
+
         return loginVO;
     }
 
     @Override
     public void logout() {
+        String token = getTokenFromRequest();
+        if (StrUtil.isNotBlank(token)) {
+            JwtUtil.invalidateToken(token);
+        }
+    }
+
+    private String getTokenFromRequest() {
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (attributes == null) {
+            return null;
+        }
+        HttpServletRequest request = attributes.getRequest();
+        String bearerToken = request.getHeader("Authorization");
+        if (StrUtil.isNotBlank(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
     }
 }
