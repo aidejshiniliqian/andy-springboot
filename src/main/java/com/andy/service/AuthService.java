@@ -7,5 +7,5 @@ public interface AuthService {
 
     LoginVO login(LoginDTO loginDTO);
 
-    void logout();
+    void logout(String token);
 }

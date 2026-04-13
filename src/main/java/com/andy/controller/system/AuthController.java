@@ -6,6 +6,7 @@ import com.andy.model.vo.LoginVO;
 import com.andy.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,8 +30,9 @@ public class AuthController {
 
     @Operation(summary = "用户退出")
     @PostMapping("/logout")
-    public CommonResult<Void> logout() {
-        authService.logout();
+    public CommonResult<Void> logout(HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+        authService.logout(token);
         return CommonResult.success();
     }
 }
